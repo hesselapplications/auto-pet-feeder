@@ -30,7 +30,6 @@ int jamPreventionSteps = 10;
  */
 void setup() {
   Serial.begin(9600);
-  Serial.println("Welcome to the Willow Pet Feeder™ :)");
   pinMode(enableStepperPin, OUTPUT);
   pinMode(directionPin, OUTPUT);
   pinMode(stepPin, OUTPUT);
