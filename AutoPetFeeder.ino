@@ -18,8 +18,8 @@ long oneDay = 24 * oneHour;
 
 // Feeding
 int rotationsPerCupOfFood = 3;
-int cupsOfFoodPerDay = 2;
-int feedingsPerDay = 1;
+int cupsOfFoodPerDay = 3;
+int feedingsPerDay = 2;
 int rotationsPerFeeding = (rotationsPerCupOfFood * cupsOfFoodPerDay) / feedingsPerDay;
 long delayAfterFeeding = oneDay / feedingsPerDay;
 long jamPreventionDelay = oneSecond / 4;
