@@ -19,11 +19,12 @@ long oneDay = 24 * oneHour;
 // Feeding
 int rotationsPerCupOfFood = 3;
 int cupsOfFoodPerDay = 3;
-int feedingsPerDay = 2;
+int feedingsPerDay = 3;
 int rotationsPerFeeding = (rotationsPerCupOfFood * cupsOfFoodPerDay) / feedingsPerDay;
-long delayAfterFeeding = oneDay / feedingsPerDay;
+long feedingWindow = 12 * oneHour;
 long jamPreventionDelay = oneSecond / 4;
 int jamPreventionSteps = 10;
+
 
 /**
  * Main setup
@@ -45,11 +46,21 @@ void loop() {
     Serial.println((String) "Starting feeding " + feeding + " of " + feedingsPerDay);
 
     long timeTakenToFeed = feed();
+    long delayAfterFeeding = getDelayAfterFeeding(feeding);
     long adjustedDelay = delayAfterFeeding - timeTakenToFeed;
     
-    Serial.println((String) "Finshed feeding " + feeding + " of " + feedingsPerDay);
-    Serial.println((String) "Delaying for " + formatDuration(adjustedDelay));
+    Serial.println((String) "Finshed feeding " + feeding + " of " + feedingsPerDay + " in " + formatDuration(timeTakenToFeed));
+    Serial.println((String) "Delaying for " + formatDuration(delayAfterFeeding) + ", adjusted " + formatDuration(adjustedDelay));
     delay(adjustedDelay);
+  }
+}
+
+long getDelayAfterFeeding(int feeding) {
+  bool isLastFeeding = feeding == feedingsPerDay;
+  if (isLastFeeding) {
+    return oneDay - feedingWindow;
+  } else {
+    return feedingWindow / (feedingsPerDay - 1);
   }
 }
 
@@ -100,5 +111,12 @@ String formatDuration(long millis) {
   long seconds = millis / oneSecond;
   millis -= seconds * oneSecond;
   
-  return (String) hours + "h, " + minutes + "m, " + seconds + "s, " + millis + "ms";
+  String formatted = String();
+  if (hours > 0) formatted += (String) hours + "h ";
+  if (minutes > 0) formatted += (String) minutes + "m ";
+  if (seconds > 0) formatted += (String) seconds + "s ";
+  if (millis > 0) formatted += (String) millis + "ms";
+  formatted.trim();
+
+  return formatted;
 }
